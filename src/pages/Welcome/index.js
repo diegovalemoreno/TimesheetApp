@@ -6,38 +6,40 @@ import {
   TouchableOpacity,
   StatusBar,
   AsyncStorage,
-  ActivityIndicator,  
+  ActivityIndicator,
 } from 'react-native';
+import { NavigationActions } from 'react-navigation';
 import PropTypes from 'prop-types';
-// import api from '../../services/api';
+import api from '../../services/api';
 import styles from './styles';
 
 export default class Welcome extends Component {
+  static navigationOptions = {
+    header: null,
+  };
+
   static propTypes = {
     navigation: PropTypes.shape({
       navigate: PropTypes.func,
     }).isRequired,
   };
+
   state = {
-    user: '',
-    token: '',
+    username: '',
     loading: false,
-     error: false,
-  }
+    errorMessage: null,
+  };
 
-  // checkUserExists = async (user, password) => {
-  //   user = await api.post('/sessions/', {
-  //     user,
-  //     password,
-  //   });
-  //   return user;
-  // }
+  checkUserExists = async (username) => {
+    const user = await api.get(`/users/${username}`);
+    return user;
+  };
 
-  // saveUser = async (user, password, token) => {
-  //   await AsyncStorage.setItem('@Ourbooks:user', user);
-  //   await AsyncStorage.setItem('@Ourbooks:password', password);
-  //   await AsyncStorage.setItem('@Ourbooks:token', token);
-  // }
+  saveUser = async (username) => {
+    await AsyncStorage.setItem('@Ourbooks:username', username);
+    // await AsyncStorage.setItem('@Ourbooks:password', password);
+    // await AsyncStorage.setItem('@Ourbooks:token', token);
+  };
 
   // forgotPassword = () => {
   //   const { navigation } = this.props;
@@ -45,49 +47,49 @@ export default class Welcome extends Component {
   // };
 
   signIn = async () => {
-    const { user } = this.state;
-    const { navigation } = this.props;
-    this.setState({ loading: true });
-    try {
-      // const response = await this.checkUserExists(user);
-      // await this.saveUser(user, response.data.token);
+    const { username } = this.state;
 
-      navigation.navigate('Appointment');
+    if (username.length === 0) return;
+
+    this.setState({ loading: true });
+
+    try {
+      await this.checkUserExists(username);
+      await this.saveUser(username);
+      const resetAction = NavigationActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: 'User' })],
+      });
+      this.props.navigation.dispatch(resetAction);
     } catch (err) {
-      this.setState({ loading: false });
-      this.setState({ error: true });
+      this.setState({ loading: false, errorMessage: 'Usuário não existe' });
     }
-  }
+  };
 
   render() {
-    const { user, loading, error } = this.state;
     return (
       <View style={styles.container}>
         <StatusBar barStyle="light-content" />
-        <Text style={styles.title}>
-          Timesheet
-        </Text>
-        <Text style={styles.text}>
-          Para continuar precisamos que voce informe seu usuario.
-        </Text>
-        { error && <Text style={styles.error}>Usuario inexiste</Text>}
+        <Text style={styles.title}>Timesheet</Text>
+        <Text style={styles.text}>Para continuar precisamos que voce informe seu usuario.</Text>
+        {!!this.state.errorMessage && <Text style={styles.error}>Usuário não eeeexiste</Text>}
         <View style={styles.form}>
           <TextInput
             style={styles.input}
             autoCapitalize="none"
             autoCorrect={false}
-            placeholder="Digite seu usuario"
-            underlineColorAndroid="transparent"
-            value={user}
-            onChangeText={text => this.setState({ user: text })}
+            placeholder="Digite seu usuário"
+            underlineColorAndroid="rgba(0, 0, 0, 0)"
+            value={this.state.username}
+            onChangeText={username => this.setState({ username })}
           />
 
-          
           <TouchableOpacity style={styles.button} onPress={this.signIn}>
-            {loading ? (
-              <ActivityIndicator size="small" color="#FFF" />)
-              : (<Text style={styles.buttonText}>Entrar</Text>
-              )}
+            {this.state.loading ? (
+              <ActivityIndicator size="small" color="#FFF" />
+            ) : (
+              <Text style={styles.buttonText}>Entrar</Text>
+            )}
           </TouchableOpacity>
           {/* <TouchableOpacity onPress={() => {}}>
             <View>

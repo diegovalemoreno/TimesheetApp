@@ -1,29 +1,34 @@
 import React, { Component } from 'react';
-import { AsyncStorage, YellowBox } from 'react-native';
-import SplashScreen from 'react-native-splash-screen';
-import createNavigator from './routes';
+import { AsyncStorage } from 'react-native';
+import createNavigator from '~/routes';
 import '~/config/ReactotronConfig';
 
-YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader', 'Class RCTCxxModule']);
-export default class App extends Component {
+class App extends Component {
   state = {
+    userCheck: false,
     userLogged: false,
-  }
-  
-  async componentDidMount() {
-    SplashScreen.hide();
-    const email = await AsyncStorage.getItem('@Ourbooks:email');
+  };
 
-    this.setState({
-      userLogged: !!email,
-    });
+  async componentDidMount() {
+    // await AsyncStorage.clear();
+    const username = await AsyncStorage.getItem('@Githuber:username');
+
+    this.appLoaded(username);
   }
+
+  appLoaded = (username) => {
+    this.setState({
+      userCheck: true,
+      userLogged: !!username,
+    });
+  };
 
   render() {
-    const { userLogged } = this.state;
-    // if (!userChecked) return null;
+    if (!this.state.userCheck) return null;
 
-    const Routes = createNavigator(userLogged);
-    return (<Routes />);
+    const Routes = createNavigator(this.state.userLogged);
+    return <Routes />;
   }
 }
+
+export default App;

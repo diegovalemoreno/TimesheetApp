@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { colors, metrics } from '../../Styles';
+import { colors, metrics } from '../../styles';
 
 const styles = StyleSheet.create({
   container: {
@@ -33,15 +33,15 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderRadius: metrics.baseRadius,
     height: 44,
-    paddingHorizontal: metrics.basePadding,  
+    paddingHorizontal: metrics.basePadding,
   },
-   
+
   input2: {
     backgroundColor: colors.white,
     borderRadius: metrics.baseRadius,
     height: 44,
-    paddingHorizontal: metrics.basePadding, 
-    marginTop: 15, 
+    paddingHorizontal: metrics.basePadding,
+    marginTop: 15,
   },
 
   button: {
