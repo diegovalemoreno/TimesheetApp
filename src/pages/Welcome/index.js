@@ -13,6 +13,7 @@ import PropTypes from 'prop-types';
 import api from '../../services/api';
 import styles from './styles';
 
+
 export default class Welcome extends Component {
   static navigationOptions = {
     header: null,
@@ -31,40 +32,29 @@ export default class Welcome extends Component {
   };
 
   checkUserExists = async (username) => {
-    const user = await api.get(`/users/${username}`);
-    return user;
+    const user = await api.get(`/users/${username}/exists`);
+    console.tron.log(user.data);
+    return user.data;
   };
 
   saveUser = async (username) => {
-    await AsyncStorage.setItem('@Ourbooks:username', username);
-    // await AsyncStorage.setItem('@Ourbooks:password', password);
-    // await AsyncStorage.setItem('@Ourbooks:token', token);
+    await AsyncStorage.setItem('@Timesheet:username', username);
   };
-
-  // forgotPassword = () => {
-  //   const { navigation } = this.props;
-  //   navigation.navigate('ForgotPassword');
-  // };
 
   signIn = async () => {
     const { username } = this.state;
-
-    if (username.length === 0) return;
-
+    const { navigation } = this.props;
     this.setState({ loading: true });
-
     try {
-      await this.checkUserExists(username);
+      const response = await this.checkUserExists(username);
       await this.saveUser(username);
-      const resetAction = NavigationActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({ routeName: 'User' })],
-      });
-      this.props.navigation.dispatch(resetAction);
+
+      navigation.navigate('Appointment');
     } catch (err) {
-      this.setState({ loading: false, errorMessage: 'Usuário não existe' });
+      this.setState({ loading: false });
+      this.setState({ error: true });
     }
-  };
+  }
 
   render() {
     return (
@@ -72,7 +62,7 @@ export default class Welcome extends Component {
         <StatusBar barStyle="light-content" />
         <Text style={styles.title}>Timesheet</Text>
         <Text style={styles.text}>Para continuar precisamos que voce informe seu usuario.</Text>
-        {!!this.state.errorMessage && <Text style={styles.error}>Usuário não eeeexiste</Text>}
+        {!!this.state.errorMessage && <Text style={styles.error}>Usuário não existe</Text>}
         <View style={styles.form}>
           <TextInput
             style={styles.input}

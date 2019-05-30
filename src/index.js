@@ -10,9 +10,9 @@ class App extends Component {
   };
 
   async componentDidMount() {
-    // await AsyncStorage.clear();
-    const username = await AsyncStorage.getItem('@Githuber:username');
-
+    //await AsyncStorage.clear();
+    const username = await AsyncStorage.getItem('@Timesheet:username');
+    console.tron.log(username);
     this.appLoaded(username);
   }
 

@@ -10,11 +10,41 @@ import Appointment from '~/pages/Appointment';
 
 // import { colors, metrics } from './styles';
 
+// const Routes = (userLogged = false) => createAppContainer(
+//   createSwitchNavigator({
+//     Welcome,
+//     Appointment,
+//   }),
+// );
+
+// export default Routes;
+
 const Routes = (userLogged = false) => createAppContainer(
-  createSwitchNavigator({
-    Welcome,
-    Appointment,
-  }),
+  createSwitchNavigator(
+    {
+      Welcome,
+      Appointment,
+      // ResetPassword,
+      // User: createBottomTabNavigator({
+      //   Books,
+      //   BooksCover,
+      // },
+      // {
+      //   tabBarOptions: {
+      //     showIcon: true,
+      //     showLabel: false,
+      //     activeTintColor: colors.white,
+      //     inactiveTintColor: colors.whiteTransparent,
+      //     style: {
+      //       backgroundColor: colors.secundary,
+      //     },
+      //   }
+      // }),
+    },
+    {
+      initialRouteName: userLogged ? 'Appointment' : 'Welcome',
+    },
+  ),
 );
 
 export default Routes;
