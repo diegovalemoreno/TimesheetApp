@@ -27,28 +27,31 @@ export default class Welcome extends Component {
 
   state = {
     username: '',
+    id: '',
     loading: false,
     errorMessage: null,
   };
 
   checkUserExists = async (username) => {
-    const user = await api.get(`/users/${username}/exists`);
-    console.tron.log(user.data);
-    return user.data;
+    const user = await api.get(`/users/${username}`);
+    
+    return user.data[0];
   };
 
-  saveUser = async (username) => {
+  saveUser = async (username, id) => {
     await AsyncStorage.setItem('@Timesheet:username', username);
+    await AsyncStorage.setItem('@Timesheet:id', id);
+    
   };
 
   signIn = async () => {
+    
     const { username } = this.state;
     const { navigation } = this.props;
     this.setState({ loading: true });
     try {
       const response = await this.checkUserExists(username);
-      await this.saveUser(username);
-
+      await this.saveUser(username, response._id);
       navigation.navigate('Appointment');
     } catch (err) {
       this.setState({ loading: false });

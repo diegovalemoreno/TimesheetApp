@@ -1,41 +1,76 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import {
-  Platform, StyleSheet, Text, View,
+  View, AsyncStorage, ActivityIndicator, FlatList,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Header from '../../components/Header';
+import api from '../../services/api';
+import styles from './styles';
+import AppointmentsItem from './components/AppointmentsItem';
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android: 'Double tap R on your keyboard to reload,\n' + 'Shake or press menu button for dev menu',
-});
+// import styles from './styles';
 
-type Props = {};
-export default class Appointment extends Component<Props> {
+const TabIcon = ({ tintColor }) => <Icon name="book" size={20} color={tintColor} />;
+
+TabIcon.propTypes = {
+  tintColor: PropTypes.string.isRequired,
+};
+
+export default class Books extends Component {
+  static navigationOptions = {
+    tabBarIcon: TabIcon,
+  };
+
+  state = {
+    data: [],
+    loading: true,
+    refreshing: false,
+  };
+
+  async componentDidMount() {
+    this.loadAppointments();
+  }
+
+  loadAppointments = async () => {
+    this.setState({ refreshing: true });
+
+    const _id = await AsyncStorage.getItem('@Timesheet:id');
+    const response = await api.get(`/users/${_id}/appointment`);
+
+    // response.data.map(async (item) => {
+    this.setState({ data: response.data });
+    // });
+
+    console.tron.log(this.state.data);
+    this.setState({
+      refreshing: false,
+      loading: false,
+    });
+  };
+
+  renderListItem = ({ item }) => <AppointmentsItem appointmentsItem={item} />;
+
+  renderList = () => {
+    const { data } = this.state;
+    return (
+      <FlatList
+        data={data.appointments}
+        keyExtractor={item => String(item._id)}
+        renderItem={this.renderListItem}
+        onRefresh={this.loadAppointments}
+        refreshing={this.state.refreshing}
+      />
+    );
+  };
+
   render() {
+    const { loading } = this.state;
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
+        <Header title="Meus apontamentos" />
+        {loading ? <ActivityIndicator style={styles.loading} /> : this.renderList()}
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
