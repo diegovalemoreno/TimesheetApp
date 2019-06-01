@@ -10,7 +10,7 @@ class App extends Component {
   };
 
   async componentDidMount() {
-    await AsyncStorage.clear();
+    // await AsyncStorage.clear();
     const username = await AsyncStorage.getItem('@Timesheet:username');
     this.appLoaded(username);
   }

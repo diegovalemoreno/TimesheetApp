@@ -19,7 +19,8 @@ TabIcon.propTypes = {
 
 export default class Books extends Component {
   static navigationOptions = {
-    tabBarIcon: TabIcon,
+    title: 'Meus apontamentos',
+    tabBarIcon: ({ tintColor }) => <Icon name="list-alt" size={20} color={tintColor} />,
   };
 
   state = {
@@ -55,7 +56,7 @@ export default class Books extends Component {
     const { data } = this.state;
     return (
       <FlatList
-        data={data.appointments}
+        data={data}
         keyExtractor={item => String(item._id)}
         renderItem={this.renderListItem}
         onRefresh={this.loadAppointments}

@@ -7,19 +7,17 @@ import styles from './styles';
 
 const AppointmentsItem = ({ appointmentsItem }) => (
   <View style={styles.container}>
-    <Text style={styles.repoTitle}>
-      {`Título: ${appointmentsItem.detail} \n${appointmentsItem.hour}`}
-    </Text>
-
+    <Text style={styles.repoTitle}>{`Título: ${appointmentsItem.detail}`}</Text>
+    <Text style={styles.repoTitle}>{`Duração: ${appointmentsItem.hour}`}</Text>
+    <Text style={styles.repoTitle}>{`Data: ${appointmentsItem.date}`}</Text>
+    <Text style={styles.repoTitle}>{`Numero Demanda: ${appointmentsItem.number}`}</Text>
     <View style={styles.infoContainer}>
-      <View style={styles.infoContainer}>
-        <Icon name="star" size={15} style={styles.infoIcon} />
+      {/* <View style={styles.infoContainer}>
         <Text style={styles.infoText}>{appointmentsItem.number}</Text>
       </View>
       <View style={styles.infoContainer}>
-        <Icon name="eye" size={15} style={styles.infoIcon} />
         <Text style={styles.infoText}>{appointmentsItem.updatedAt}</Text>
-      </View>
+      </View> */}
     </View>
   </View>
 );
