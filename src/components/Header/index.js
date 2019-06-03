@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, AsyncStorage } from 'react-native';
+import {
+  TouchableOpacity, AsyncStorage, View, StatusBar, Text,
+} from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
@@ -8,25 +10,29 @@ import styles from './styles';
 
 class HeaderRight extends Component {
   static propTypes = {
+    title: PropTypes.string.isRequired,
     navigation: PropTypes.shape({
       dispatch: PropTypes.func,
     }).isRequired,
   };
 
   signOut = async () => {
+    const { navigation } = this.props;
     await AsyncStorage.clear();
-    const resetAction = NavigationActions.reset({
-      index: 0,
-      actions: [NavigationActions.navigate({ routeName: 'Welcome' })],
-    });
-    this.props.navigation.dispatch(resetAction);
+    navigation.navigate('Welcome');
   };
 
   render() {
+    const { title } = this.props;
     return (
-      <TouchableOpacity onPress={this.signOut}>
-        <Icon name="exchange" size={16} style={styles.icon} />
-      </TouchableOpacity>
+      <View style={styles.container}>
+        <StatusBar barStyle="dark-content" />
+        <View style={styles.left} />
+        <Text style={styles.title}>{title}</Text>
+        <TouchableOpacity onPress={this.signOut}>
+          <Icon name="exchange" size={16} style={styles.icon} />
+        </TouchableOpacity>
+      </View>
     );
   }
 }
