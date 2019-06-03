@@ -43,7 +43,6 @@ export default class Books extends Component {
     this.setState({ data: response.data });
     // });
 
-    console.tron.log(this.state.data);
     this.setState({
       refreshing: false,
       loading: false,
