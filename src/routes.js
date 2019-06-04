@@ -6,6 +6,7 @@ import {
 import React, { Component } from 'react';
 import Welcome from '~/pages/Welcome';
 import Appointment from '~/pages/Appointment';
+import AppointmentsModal from '~/modals/AppointmentsModal';
 // import HeaderRight from '~/components/HeaderRight';
 
 // import { colors, metrics } from './styles';
@@ -24,6 +25,7 @@ const Routes = (userLogged = false) => createAppContainer(
     {
       Welcome,
       Appointment,
+      AppointmentsModal,
       // ResetPassword,
       // User: createBottomTabNavigator({
       //   Books,

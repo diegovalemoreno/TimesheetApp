@@ -8,11 +8,11 @@ import {
   AsyncStorage,
   ActivityIndicator,
 } from 'react-native';
+
 import { NavigationActions } from 'react-navigation';
 import PropTypes from 'prop-types';
 import api from '../../services/api';
 import styles from './styles';
-
 
 export default class Welcome extends Component {
   static navigationOptions = {
@@ -34,18 +34,16 @@ export default class Welcome extends Component {
 
   checkUserExists = async (username) => {
     const user = await api.get(`/users/${username}`);
-    
+
     return user.data[0];
   };
 
   saveUser = async (username, id) => {
     await AsyncStorage.setItem('@Timesheet:username', username);
     await AsyncStorage.setItem('@Timesheet:id', id);
-    
   };
 
   signIn = async () => {
-    
     const { username } = this.state;
     const { navigation } = this.props;
     this.setState({ loading: true });
@@ -57,7 +55,7 @@ export default class Welcome extends Component {
       this.setState({ loading: false });
       this.setState({ error: true });
     }
-  }
+  };
 
   render() {
     return (

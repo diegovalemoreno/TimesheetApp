@@ -13,6 +13,7 @@ import Header from '../../components/Header';
 import api from '../../services/api';
 import styles from './styles';
 import AppointmentsItem from './components/AppointmentsItem';
+// import AppointmentsModal from '~/modals/AppointmentsModal';
 
 // import styles from './styles';
 
@@ -26,6 +27,12 @@ export default class Appointment extends Component {
   static navigationOptions = {
     title: 'Meus apontamentos',
     tabBarIcon: ({ tintColor }) => <Icon name="list-alt" size={20} color={tintColor} />,
+  };
+
+  static propTypes = {
+    navigation: PropTypes.shape({
+      navigate: PropTypes.func,
+    }).isRequired,
   };
 
   state = {
@@ -70,29 +77,40 @@ export default class Appointment extends Component {
   };
 
   insertWithMoc = async () => {
-    // const _id = await AsyncStorage.getItem('@Timesheet:id');
-    console.tron.log(this.state.id);
-    const response = await api
-      .post(`/users/${this.state.id}/appointment`, {
-        date: '2019-05-29',
-        hour: 2,
-        number: 1512,
-        detail: 'Registro automático via RN',
-      })
-      .then((response) => {
-        this.loadAppointments();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    const { navigation } = this.props;
+    // this.setState({ loading: true });
+    try {
+      // const response = await this.checkUserExists(username);
+      // await this.saveUser(username, response._id);
+      navigation.navigate('AppointmentsModal');
+    } catch (err) {
+      // this.setState({ loading: false });
+      // this.setState({ error: true });
+    }
+    // // const _id = await AsyncStorage.getItem('@Timesheet:id');
+    // console.tron.log(this.state.id);
+    // const response = await api
+    //   .post(`/users/${this.state.id}/appointment`, {
+    //     date: '2019-05-29',
+    //     hour: 2,
+    //     number: 1512,
+    //     detail: 'Registro automático via RN',
+    //   })
+    //   .then((response) => {
+    //     this.loadAppointments();
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
 
-    this.loadAppointments();
+    // this.loadAppointments();
   };
 
   render() {
     const { loading } = this.state;
     return (
       <View style={styles.container}>
+        {/* <AppointmentsModal /> */}
         <View style={styles.form}>
           <Header title="Meus apontamentos" />
           {loading ? <ActivityIndicator style={styles.loading} /> : this.renderList()}
